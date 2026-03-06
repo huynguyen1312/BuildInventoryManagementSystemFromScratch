@@ -1,7 +1,7 @@
 # System design process
 
-1. [Problem Understanding](docs/problem_understanding.md)
-2. [Use Cases / User Stories](docs/use_cases.md)  
+1. [Problem Understanding](problem_understanding.md)
+2. [Use Cases / User Stories](use_cases.md)  
 3. Domain Modelling
 4. Entity Relationship Diagram (ERD)  
 5. System Architecture  
