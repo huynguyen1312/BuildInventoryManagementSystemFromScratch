@@ -1,5 +1,7 @@
 # Use Cases & user stories
 
+- [diagram](ucdia.drawio.svg)
+  
 ## Actors
 
 - Manager
