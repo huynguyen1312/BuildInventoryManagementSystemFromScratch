@@ -1,5 +1,3 @@
-# BuildInventoryManagementSystemFromScratch
-
 # Inventory Management System
 
 A simple backend service for managing products and stock across warehouses.
@@ -32,4 +30,4 @@ Current MVP includes:
 
 ---
 
-## Running the project 
+## Running the project
