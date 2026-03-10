@@ -5,7 +5,7 @@
 ## Actors
 
 - Manager
-- Warehouse Staff
+- Warehouse staff
 - exist more, when this version will be updated later
 
 ## Use Cases
