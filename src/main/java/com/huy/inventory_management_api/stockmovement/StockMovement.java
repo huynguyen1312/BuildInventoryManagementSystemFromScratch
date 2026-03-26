@@ -30,12 +30,13 @@ public class StockMovement {
     private Warehouse warehouse;  
   
     @Enumerated(EnumType.STRING)  
-    @Column(nullable = false, length = 10)  
+    @Column(nullable = false, length = 20)  
     private MovementType type;  
   
     @Column(nullable = false)  
     private Integer quantity;  
   
+    @Column(length = 255)
     private String note;  
   
     @Column(name = "created_at", nullable = false, updatable = false)  
