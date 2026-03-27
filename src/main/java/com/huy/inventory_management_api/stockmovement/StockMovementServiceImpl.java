@@ -1,5 +1,6 @@
 package com.huy.inventory_management_api.stockmovement;
 
+import com.huy.inventory_management_api.common.exception.ResourceNotFoundException;
 import com.huy.inventory_management_api.product.Product;
 import com.huy.inventory_management_api.product.ProductRepository;
 import com.huy.inventory_management_api.stockmovement.DTO.StockMovementResponse;
@@ -36,7 +37,7 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Override
     public StockMovementResponse getStockMovementById(Long id) {
         StockMovement stockMovement = stockMovementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stock movement not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Stock movement not found with id: " + id));
 
         return mapToStockMovementResponse(stockMovement);
     }
@@ -64,7 +65,7 @@ public class StockMovementServiceImpl implements StockMovementService {
                 .map(this::mapToStockMovementResponse)
                 .toList();
     }
-    
+
     private StockMovementResponse mapToStockMovementResponse(StockMovement stockMovement) {
         return new StockMovementResponse(
                 stockMovement.getId(),

@@ -1,5 +1,7 @@
 package com.huy.inventory_management_api.warehouse;
 
+import com.huy.inventory_management_api.common.exception.DuplicateResourceException;
+import com.huy.inventory_management_api.common.exception.ResourceNotFoundException;
 import com.huy.inventory_management_api.warehouse.DTO.*;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,7 +19,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public WarehouseResponse createWarehouse(WarehouseRequest request) {
         // Implementation for creating a warehouse
         if(warehouseRepository.existsByCode(request.getCode())) {
-            throw new IllegalArgumentException("Warehouse with code already exists");
+            throw new DuplicateResourceException("Warehouse code already exists: " + request.getCode());
         }
         Warehouse warehouse = Warehouse.builder()
                 .code(request.getCode())
@@ -42,7 +44,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public WarehouseResponse getWarehouseById(Long id) {
         // Implementation for retrieving a warehouse by ID
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
 
         return mapToWarehouseResponse(warehouse);
     }
@@ -51,11 +53,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     public WarehouseResponse updateWarehouse(Long id, WarehouseRequest request) {
         // Implementation for updating a warehouse
         Warehouse existingWarehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
 
         if (!existingWarehouse.getCode().equals(request.getCode())
                 && warehouseRepository.existsByCode(request.getCode())) {
-            throw new RuntimeException("Warehouse code already exists: " + request.getCode());
+            throw new DuplicateResourceException("Warehouse code already exists: " + request.getCode());
         }
 
         existingWarehouse.setCode(request.getCode());
@@ -71,7 +73,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void deleteWarehouse(Long id) {
         // Implementation for deleting a warehouse
         Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + id));
 
         warehouseRepository.delete(warehouse);
     }

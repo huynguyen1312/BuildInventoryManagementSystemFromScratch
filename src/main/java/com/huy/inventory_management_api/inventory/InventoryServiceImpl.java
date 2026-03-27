@@ -1,5 +1,7 @@
 package com.huy.inventory_management_api.inventory;
 
+import com.huy.inventory_management_api.common.exception.InsufficientStockException;
+import com.huy.inventory_management_api.common.exception.ResourceNotFoundException;
 import com.huy.inventory_management_api.inventory.DTO.InventoryResponse;
 import com.huy.inventory_management_api.inventory.DTO.StockInRequest;
 import com.huy.inventory_management_api.inventory.DTO.StockOutRequest;
@@ -32,10 +34,10 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional
     public InventoryResponse stockIn(StockInRequest request) {
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + request.getProductId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.getProductId()));
 
         Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.getWarehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.getWarehouseId()));
 
         Inventory inventory = inventoryRepository
                 .findByProductIdAndWarehouseId(product.getId(), warehouse.getId())
@@ -68,20 +70,20 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional
     public InventoryResponse stockOut(StockOutRequest request) {
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + request.getProductId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.getProductId()));
 
         Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found with id: " + request.getWarehouseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id: " + request.getWarehouseId()));
 
         Inventory inventory = inventoryRepository
                 .findByProductIdAndWarehouseId(product.getId(), warehouse.getId())
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Inventory not found for product id " + product.getId()
                                 + " and warehouse id " + warehouse.getId()
                 ));
 
         if (inventory.getQuantity() < request.getQuantity()) {
-            throw new RuntimeException("Insufficient stock. Current quantity: " + inventory.getQuantity());
+            throw new InsufficientStockException("Insufficient stock. Current quantity: " + inventory.getQuantity());
         }
 
         inventory.setQuantity(inventory.getQuantity() - request.getQuantity());
@@ -112,7 +114,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public InventoryResponse getInventoryById(Long id) {
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + id));
 
         return mapToInventoryResponse(inventory);
     }
@@ -120,7 +122,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public InventoryResponse getInventoryByProductAndWarehouse(Long productId, Long warehouseId) {
         Inventory inventory = inventoryRepository.findByProductIdAndWarehouseId(productId, warehouseId)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Inventory not found for product id " + productId + " and warehouse id " + warehouseId
                 ));
 
